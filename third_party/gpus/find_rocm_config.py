@@ -187,8 +187,8 @@ def _find_rocrand_config(rocm_install_path):
 
   def rocrand_version_number(path):
     possible_version_files = [
-        "rocrand/include/rocrand_version.h",  # ROCm 5.0 and prior
         "include/rocrand/rocrand_version.h",  # ROCm 5.1
+        "rocrand/include/rocrand_version.h",  # ROCm 5.0 and prior
     ]
     version_file = None
     for f in possible_version_files:
