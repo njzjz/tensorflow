@@ -32,6 +32,7 @@ WELL_KNOWN_PROTO_MAP = {
     "duration": ("google/protobuf/duration.proto", []),
     "empty": ("google/protobuf/empty.proto", []),
     "field_mask": ("google/protobuf/field_mask.proto", []),
+    "port_def": ("google/protobuf/port_def.inc", []),
     "source_context": ("google/protobuf/source_context.proto", []),
     "struct": ("google/protobuf/struct.proto", []),
     "timestamp": ("google/protobuf/timestamp.proto", []),
