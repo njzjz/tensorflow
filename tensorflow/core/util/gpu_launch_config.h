@@ -106,13 +106,13 @@ https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/util/gpu_ke
 
 namespace tensorflow {
 
-inline int DivUp(int a, int b) { return (a + b - 1) / b; }
+inline int64 DivUp(int64 a, int64 b) { return (a + b - 1) / b; }
 
 struct GpuLaunchConfig {
   // Logical number of thread that works on the elements. If each logical
   // thread works on exactly a single element, this is the same as the working
   // element count.
-  int virtual_thread_count = -1;
+  int64 virtual_thread_count = -1;
   // Number of threads per block.
   int thread_per_block = -1;
   // Number of blocks for GPU kernel launch.
@@ -124,12 +124,12 @@ CREATE_CUDA_TYPE_ALIAS(GpuLaunchConfig, CudaLaunchConfig);
 // This is assuming the kernel is quite simple and will largely be
 // memory-limited.
 // REQUIRES: work_element_count >= 0.
-inline GpuLaunchConfig GetGpuLaunchConfig(int work_element_count,
+inline GpuLaunchConfig GetGpuLaunchConfig(int64 work_element_count,
                                           const Eigen::GpuDevice& d) {
   CHECK_GE(work_element_count, 0);
   GpuLaunchConfig config;
-  const int virtual_thread_count = work_element_count;
-  const int physical_thread_count = std::min(
+  const int64 virtual_thread_count = work_element_count;
+  const int64 physical_thread_count = std::min(
       d.getNumGpuMultiProcessors() * d.maxGpuThreadsPerMultiProcessor(),
       virtual_thread_count);
   const int thread_per_block = std::min(1024, d.maxGpuThreadsPerBlock());
@@ -143,7 +143,7 @@ inline GpuLaunchConfig GetGpuLaunchConfig(int work_element_count,
   return config;
 }
 #ifndef TENSORFLOW_USE_ROCM
-inline CudaLaunchConfig GetCudaLaunchConfig(int work_element_count,
+inline CudaLaunchConfig GetCudaLaunchConfig(int64 work_element_count,
                                             const Eigen::GpuDevice& d) {
   return GetGpuLaunchConfig(work_element_count, d);
 }
@@ -153,7 +153,7 @@ inline CudaLaunchConfig GetCudaLaunchConfig(int work_element_count,
 // variant takes the resource limits of func into account to maximize occupancy.
 // REQUIRES: work_element_count >= 0.
 template <typename DeviceFunc>
-GpuLaunchConfig GetGpuLaunchConfig(int work_element_count,
+GpuLaunchConfig GetGpuLaunchConfig(int64 work_element_count,
                                    const Eigen::GpuDevice& d, DeviceFunc func,
                                    size_t dynamic_shared_memory_size,
                                    int block_size_limit) {
@@ -190,7 +190,7 @@ CREATE_CUDA_HOST_FUNCTION_ALIAS(GetGpuLaunchConfig, GetCudaLaunchConfig);
 // REQUIRES: work_element_count >= 0.
 template <typename DeviceFunc>
 GpuLaunchConfig GetGpuLaunchConfigFixedBlockSize(
-    int work_element_count, const Eigen::GpuDevice& d, DeviceFunc func,
+    int64 work_element_count, const Eigen::GpuDevice& d, DeviceFunc func,
     size_t dynamic_shared_memory_size, int fixed_block_size) {
   CHECK_GE(work_element_count, 0);
   GpuLaunchConfig config;
